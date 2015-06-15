@@ -7,6 +7,10 @@
   <version>1.0-SNAPSHOT</version>
   <name>messager Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -14,10 +18,22 @@
       <version>3.1.0</version>
     </dependency>
     <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>taobao-sdk</groupId>
+      <artifactId>taobao-sdk</artifactId>
+      <version>1433579212717-20150613</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/taobao-sdk-java-auto_1433579212717-20150613.jar</systemPath>
     </dependency>
   </dependencies>
   <build>
