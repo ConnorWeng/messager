@@ -5,8 +5,15 @@ import com.taobao.api.internal.tmc.MessageHandler;
 import com.taobao.api.internal.tmc.MessageStatus;
 import com.taobao.api.internal.tmc.TmcClient;
 import com.taobao.top.link.LinkException;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServlet;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by Connor on 6/14/15.
@@ -52,8 +59,17 @@ public class MessageDispatcher extends HttpServlet {
         System.out.println("handle add");
     }
 
-    public void handleDelete(String content) {
+    public void handleDelete(String content) throws IOException {
         System.out.println("handle delete");
+        JSONObject jsonObject = new JSONObject(content);
+        String numIid = String.valueOf(jsonObject.get("num_iid"));
+        HttpURLConnection connection = (HttpURLConnection)new URL("http://yjsc.51zwd.com:30005/delete?numIid=" + numIid).openConnection();
+        connection.setRequestProperty("Accept-Charset", "UTF-8");
+        InputStream response = connection.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(response));
+        System.out.println(reader.readLine());
+        reader.close();
+        connection.disconnect();
     }
 
     public void handleUpdate(String content) {
