@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -55,24 +56,29 @@ public class MessageDispatcher extends HttpServlet {
         System.out.println("connected");
     }
 
-    public void handleAdd(String content) {
+    public void handleAdd(String content) throws IOException {
         System.out.println("handle add");
+        handle(content, "add");
     }
 
     public void handleDelete(String content) throws IOException {
         System.out.println("handle delete");
+        handle(content, "delete");
+    }
+
+    public void handleUpdate(String content) {
+        System.out.println("handle update");
+    }
+
+    private void handle(String content, String action) throws IOException {
         JSONObject jsonObject = new JSONObject(content);
         String numIid = String.valueOf(jsonObject.get("num_iid"));
-        HttpURLConnection connection = (HttpURLConnection)new URL("http://yjsc.51zwd.com:30005/delete?numIid=" + numIid).openConnection();
+        HttpURLConnection connection = (HttpURLConnection)new URL("http://yjsc.51zwd.com:30005/"+action+"?numIid=" + numIid).openConnection();
         connection.setRequestProperty("Accept-Charset", "UTF-8");
         InputStream response = connection.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(response));
         System.out.println(reader.readLine());
         reader.close();
         connection.disconnect();
-    }
-
-    public void handleUpdate(String content) {
-        System.out.println("handle update");
     }
 }
