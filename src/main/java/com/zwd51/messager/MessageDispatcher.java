@@ -66,8 +66,16 @@ public class MessageDispatcher extends HttpServlet {
         handle(content, "delete");
     }
 
-    public void handleUpdate(String content) {
+    public void handleUpdate(String content) throws IOException {
         System.out.println("handle update");
+        JSONObject jsonObject = new JSONObject(content);
+        String changedFields = jsonObject.getString("changed_fields");
+        if (changedFields.contains("price") ||
+                changedFields.contains("title") ||
+                changedFields.contains("desc") ||
+                changedFields.contains("sku")) {
+            handle(content, "change");
+        }
     }
 
     private void handle(String content, String action) throws IOException {
