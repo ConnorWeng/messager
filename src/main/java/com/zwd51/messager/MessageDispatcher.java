@@ -81,7 +81,7 @@ public class MessageDispatcher extends HttpServlet {
     private void handle(String content, String action) throws IOException {
         JSONObject jsonObject = new JSONObject(content);
         String numIid = String.valueOf(jsonObject.get("num_iid"));
-        HttpURLConnection connection = (HttpURLConnection)new URL("http://yjsc.51zwd.com:30005/"+action+"?numIid=" + numIid).openConnection();
+        HttpURLConnection connection = (HttpURLConnection)new URL("http://121.41.170.236:30005/"+action+"?numIid=" + numIid).openConnection();
         connection.setRequestProperty("Accept-Charset", "UTF-8");
         InputStream response = connection.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(response));
