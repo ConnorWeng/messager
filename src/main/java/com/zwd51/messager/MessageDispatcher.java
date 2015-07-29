@@ -73,7 +73,9 @@ public class MessageDispatcher extends HttpServlet {
         if (changedFields.contains("price") ||
                 changedFields.contains("title") ||
                 changedFields.contains("desc") ||
-                changedFields.contains("sku")) {
+                changedFields.contains("sku") ||
+                changedFields.contains("item_img") ||
+                changedFields.contains("prop_img")) {
             handle(content, "change");
         }
     }
