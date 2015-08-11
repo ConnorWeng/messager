@@ -28,8 +28,6 @@ public class MessageDispatcher extends HttpServlet {
         client.setMessageHandler(new MessageHandler() {
             public void onMessage(Message message, MessageStatus messageStatus) {
                 try {
-                    System.out.println(message.getTopic());
-                    System.out.println(message.getContent());
                     switch (message.getTopic()) {
                         case "taobao_item_ItemAdd":
                         case "taobao_item_ItemUpshelf":
@@ -57,17 +55,14 @@ public class MessageDispatcher extends HttpServlet {
     }
 
     public void handleAdd(String content) throws IOException {
-        System.out.println("handle add");
         handle(content, "add");
     }
 
     public void handleDelete(String content) throws IOException {
-        System.out.println("handle delete");
         handle(content, "delete");
     }
 
     public void handleUpdate(String content) throws IOException {
-        System.out.println("handle update");
         JSONObject jsonObject = new JSONObject(content);
         String changedFields = jsonObject.getString("changed_fields");
         if (changedFields.contains("price") ||
@@ -83,19 +78,25 @@ public class MessageDispatcher extends HttpServlet {
     private void handle(String content, String action) throws IOException {
         JSONObject jsonObject = new JSONObject(content);
         String numIid = String.valueOf(jsonObject.get("num_iid"));
-        String nick = String.valueOf(jsonObject.get("nick"));
-        String url = "http://121.41.170.236:30005/" + action + "?numIid=" + numIid + "&nick=" + nick;
-        if (action == "add") {
-            String title = String.valueOf(jsonObject.get("title"));
-            String price = String.valueOf(jsonObject.get("price"));
-            url += "&price=" + price + "&title=" + title;
+        String nick = "";
+        String url = "http://121.41.170.236:30005/" + action + "?numIid=" + numIid;
+        if (action == "add" && jsonObject.has("nick")) {
+            nick = jsonObject.getString("nick");
+            String title = jsonObject.getString("title");
+            String price = jsonObject.getString("price");
+            url += "&nick=" + nick + "&price=" + price + "&title=" + title;
         }
         HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
         connection.setRequestProperty("Accept-Charset", "UTF-8");
         InputStream response = connection.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(response));
-        System.out.println(reader.readLine());
+        String resp = reader.readLine();
         reader.close();
         connection.disconnect();
+        if (resp.contains("ok")) {
+            System.out.println(action + " success numIid:" + numIid + " nick:" + nick + " " + resp);
+        } else {
+            System.out.println(action + " fail: numIid:" + numIid + " nick:" + nick + " " + resp);
+        }
     }
 }
