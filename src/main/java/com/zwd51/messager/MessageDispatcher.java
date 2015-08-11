@@ -79,7 +79,7 @@ public class MessageDispatcher extends HttpServlet {
         JSONObject jsonObject = new JSONObject(content);
         String numIid = String.valueOf(jsonObject.get("num_iid"));
         String nick = "";
-        String url = "http://121.41.170.236:30005/" + action + "?numIid=" + numIid;
+        String url = System.getenv("API_URL") + "/" + action + "?numIid=" + numIid;
         if (action == "add" && jsonObject.has("nick")) {
             nick = jsonObject.getString("nick");
             String title = jsonObject.getString("title");
