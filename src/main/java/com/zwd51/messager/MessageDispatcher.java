@@ -15,11 +15,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Connor on 6/14/15.
  */
 public class MessageDispatcher extends HttpServlet {
+
+    private ArrayList<String> changeNumIids = new ArrayList<String>();
 
     public MessageDispatcher() throws LinkException {
         super();
@@ -64,6 +67,7 @@ public class MessageDispatcher extends HttpServlet {
 
     public void handleUpdate(String content) throws IOException {
         JSONObject jsonObject = new JSONObject(content);
+        String numIid = String.valueOf(jsonObject.get("num_iid"));
         String changedFields = jsonObject.getString("changed_fields");
         if (changedFields.contains("price") ||
                 changedFields.contains("title") ||
@@ -71,7 +75,10 @@ public class MessageDispatcher extends HttpServlet {
                 changedFields.contains("sku") ||
                 changedFields.contains("item_img") ||
                 changedFields.contains("prop_img")) {
-            handle(content, "change");
+            if (!changeNumIids.contains(numIid)) {
+                handle(content, "change");
+                changeNumIids.add(numIid);
+            }
         }
     }
 
