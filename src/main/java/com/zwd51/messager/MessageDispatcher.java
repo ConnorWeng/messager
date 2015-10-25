@@ -101,9 +101,9 @@ public class MessageDispatcher extends HttpServlet {
         reader.close();
         connection.disconnect();
         if (resp.contains("ok")) {
-            System.out.println(action + " success numIid:" + numIid + " nick:" + nick + " " + resp);
+            System.out.println(action + " success: " + content + " resp:" + resp);
         } else {
-            System.out.println(action + " fail: numIid:" + numIid + " nick:" + nick + " " + resp);
+            System.out.println(action + " fail: " + content + " resp:" + resp);
         }
     }
 }
