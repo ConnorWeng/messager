@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -75,9 +74,15 @@ public class MessageDispatcher extends HttpServlet {
                 changedFields.contains("sku") ||
                 changedFields.contains("item_img") ||
                 changedFields.contains("prop_img")) {
-            if (!changeNumIids.contains(numIid)) {
+            boolean doIt = false;
+            synchronized (this) {
+                if (!changeNumIids.contains(numIid)) {
+                    changeNumIids.add(numIid);
+                    doIt = true;
+                }
+            }
+            if (doIt) {
                 handle(content, "change");
-                changeNumIids.add(numIid);
             }
         }
     }
