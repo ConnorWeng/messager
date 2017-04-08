@@ -5,6 +5,8 @@ import com.taobao.api.internal.tmc.MessageHandler;
 import com.taobao.api.internal.tmc.MessageStatus;
 import com.taobao.api.internal.tmc.TmcClient;
 import com.taobao.top.link.LinkException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServlet;
@@ -21,11 +23,13 @@ import java.util.ArrayList;
  */
 public class MessageDispatcher extends HttpServlet {
 
+    private static Log logger = LogFactory.getLog(MessageDispatcher.class);
+
     private ArrayList<String> changeNumIids = new ArrayList<String>();
 
     public MessageDispatcher() throws LinkException {
         super();
-        System.out.println("i am message dispatcher");
+        logger.info("i am message dispatcher");
         TmcClient client = new TmcClient(System.getenv("APP_KEY"), System.getenv("APP_SECRET"), "default");
         client.setMessageHandler(new MessageHandler() {
             public void onMessage(Message message, MessageStatus messageStatus) {
@@ -43,17 +47,17 @@ public class MessageDispatcher extends HttpServlet {
                             handleUpdate(message.getContent());
                             break;
                         default:
-                            System.out.println("not handled");
+                            logger.error("message not handled");
                             break;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
                     messageStatus.fail();
+                    logger.error("onMessage exception", e);
                 }
             }
         });
         client.connect();
-        System.out.println("connected");
+        logger.info("tmc client connected");
     }
 
     public void handleAdd(String content) throws IOException {
@@ -106,9 +110,9 @@ public class MessageDispatcher extends HttpServlet {
         reader.close();
         connection.disconnect();
         if (resp.contains("ok")) {
-            System.out.println(action + " success: " + content + " resp:" + resp);
+            logger.info(action + " success: " + content + " resp:" + resp);
         } else {
-            System.out.println(action + " fail: " + content + " resp:" + resp);
+            logger.error(action + " fail: " + content + " resp:" + resp);
         }
     }
 }
