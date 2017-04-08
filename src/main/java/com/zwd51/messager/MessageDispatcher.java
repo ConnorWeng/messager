@@ -52,7 +52,7 @@ public class MessageDispatcher extends HttpServlet {
                     }
                 } catch (Exception e) {
                     messageStatus.fail();
-                    logger.error("onMessage exception", e);
+                    logger.error("onMessage exception " + message.getContent(), e);
                 }
             }
         });
@@ -96,7 +96,19 @@ public class MessageDispatcher extends HttpServlet {
         String numIid = String.valueOf(jsonObject.get("num_iid"));
         String nick = "";
         String url = System.getenv("API_URL") + "/" + action + "?numIid=" + numIid;
-        if (action == "add" && jsonObject.has("nick")) {
+        if (action == "add") {
+            if (!jsonObject.has("nick")) {
+                logger.error("add action lack nick " + content);
+                return;
+            }
+            if (!jsonObject.has("title")) {
+                logger.error("add action lack title " + content);
+                return;
+            }
+            if (!jsonObject.has("price")) {
+                logger.error("add action lack price " + content);
+                return;
+            }
             nick = jsonObject.getString("nick");
             String title = jsonObject.getString("title");
             String price = jsonObject.getString("price");
