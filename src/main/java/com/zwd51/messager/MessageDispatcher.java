@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -112,7 +113,7 @@ public class MessageDispatcher extends HttpServlet {
             nick = jsonObject.getString("nick");
             String title = jsonObject.getString("title");
             String price = jsonObject.getString("price");
-            url += "&nick=" + nick + "&price=" + price + "&title=" + title;
+            url += "&nick=" + URLEncoder.encode(nick, "UTF-8") + "&price=" + URLEncoder.encode(price, "UTF-8") + "&title=" + URLEncoder.encode(title, "UTF-8");
         }
         HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
         connection.setRequestProperty("Accept-Charset", "UTF-8");
